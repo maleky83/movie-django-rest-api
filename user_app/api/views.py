@@ -1,13 +1,13 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, APIView
 from .serializers import RegistrationSerializer
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
+from user_app import models
 
 
-@api_view(['POST',])
-def logout_view(request):
-    if request.method == 'POST':
+class logoutAV(APIView):
+    def post(self, request):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
 
