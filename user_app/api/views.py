@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from user_app import models
+# from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class logoutAV(APIView):
@@ -27,8 +28,16 @@ def registration_view(request):
             data['email'] = account.email
             data['response'] = 'registration successful'
 
+            # for token authentication
             token = Token.objects.get(user=account).key
             data['token'] = token
+
+            # for jwt authentication
+            # refresh = RefreshToken.for_user(account)
+            # data['token'] = {
+            #     'refresh': str(refresh),
+            #     'access': str(refresh.access_token)
+            # }
 
         else:
             data = serializer.errors

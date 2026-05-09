@@ -9,7 +9,7 @@ class StreamPlatform(models.Model):
     website = models.URLField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return f'{self.id} - {self.name}'
 
 
 class WatchList(models.Model):
@@ -23,7 +23,7 @@ class WatchList(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.title} - {self.platform}'
+        return f'{self.id} - {self.title} - {self.platform.name}'
 
 
 class Review(models.Model):
@@ -40,4 +40,4 @@ class Review(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'rating:{self.rating}  user:{self.review_user}'
+        return f'{self.id} - {self.review_user}:{self.rating}'

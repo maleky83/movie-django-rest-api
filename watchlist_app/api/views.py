@@ -1,14 +1,21 @@
+# import models
 from watchlist_app.models import Review, WatchList, StreamPlatform
+# import serializers
 from .serializers import ReviewSerializer, WatchListSerializer, StreamPlatformSerializer
-from rest_framework import viewsets, generics, status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+# import module rest api djagno views
+from rest_framework import viewsets, generics
+# import permissions views
 from .permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnlyOrAdmin
-from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+# import throttle
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, ScopedRateThrottle
+from watchlist_app.throttling import ReviewCreateThrottle, ReviewListThrottle
 
 
-class ReviewCreate(generics.CreateAPIView):
+class ReviewCreateAV(generics.CreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [IsAuthenticated,]
+    throttle_classes = [ReviewCreateThrottle]
 
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
@@ -36,24 +43,28 @@ class ReviewCreate(generics.CreateAPIView):
         serializer.save(watchlist=watchlist, review_user=review_user)
 
 
-class ReviewList(generics.ListCreateAPIView):
+class ReviewListAV(generics.ListAPIView):
     serializer_class = ReviewSerializer
+    throttle_classes = [ReviewListThrottle]
 
     def get_queryset(self):
         pk = self.kwargs['pk']
         return Review.objects.filter(watchlist=pk)
 
 
-class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
+class ReviewDetailAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsReviewUserOrReadOnlyOrAdmin]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'review-detail'
 
 
 class StreamPlatformVS(viewsets.ModelViewSet):
     queryset = StreamPlatform.objects.all()
     serializer_class = StreamPlatformSerializer
     permission_classes = [IsAdminOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
 
 class WatchListVS(viewsets.ModelViewSet):

@@ -127,7 +127,28 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework-simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        # for jwt
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+
+    # Throttle
+    # for through numbers request user and for controling requests
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle',
+    # ],
+    # 1 request allow to anon and 3 requst allow user
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '100/day',
+        'review-create': '100/day',
+        'review-list': '100/day',
+        'review-detail': '100/day',
+    }
 }
+
+# for jwt
+# SIMPLE_JWT = {
+#     'ROTATE_REFRESH_TOKENS': True
+# }

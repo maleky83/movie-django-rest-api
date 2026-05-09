@@ -8,8 +8,9 @@ urlpatterns = [
     path('register/', registration_view, name='register'),
     path('logout/', logoutAV.as_view(), name='logout'),
 
-    path('api/token/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
-    path(
-        'api/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'
-    ),
+    # for jwt
+    # path('api/token/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
+    # path(
+    #     'api/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'
+    # ),
 ]
