@@ -1,17 +1,14 @@
 from watchlist_app.models import Review, WatchList, StreamPlatform
 from .serializers import ReviewSerializer, WatchListSerializer, StreamPlatformSerializer
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnlyOrAdmin
+from rest_framework.response import Response
 
 
-class ReviewList(generics.ListCreateAPIView):
+class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def get_queryset(self):
-        pk = self.kwargs['pk']
-        return Review.objects.filter(watchlist=pk)
+    permission_classes = [IsAuthenticatedOrReadOnly,]
 
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
@@ -39,10 +36,18 @@ class ReviewList(generics.ListCreateAPIView):
         serializer.save(watchlist=watchlist, review_user=review_user)
 
 
+class ReviewList(generics.ListCreateAPIView):
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Review.objects.filter(watchlist=pk)
+
+
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsReviewUserOrReadOnly]
+    permission_classes = [IsReviewUserOrReadOnlyOrAdmin]
 
 
 class StreamPlatformVS(viewsets.ModelViewSet):
