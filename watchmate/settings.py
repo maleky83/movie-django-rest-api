@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+# تنظیمات JWT (خیلی مهمه!)
+from datetime import timedelta
 
 from pathlib import Path
 
@@ -150,5 +152,14 @@ REST_FRAMEWORK = {
 
 # for jwt
 # SIMPLE_JWT = {
-#     'ROTATE_REFRESH_TOKENS': True
+#     # توکن دسترسی: 1 ساعت
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+#     # توکن refresh: 1 روز
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKENS': True,
+#     # هر بار refresh جدید بده
+#     # توکن قدیمی رو غیرفعال کن
+#     'BLACKLIST_AFTER_ROTATION': True,
+#     # فرمت هدر: Bearer <token>
+#     'AUTH_HEADER_TYPES': ('Bearer',),
 # }
